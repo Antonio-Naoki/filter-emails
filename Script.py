@@ -12,7 +12,7 @@ def limpiar_correos(df, columna_correo):
         if isinstance(correos, str):
             # Separar correos por comas y limpiar espacios
             lista_correos = [correo.strip() for correo in correos.split(',')]
-            # Filtrar correos válidos que no comiencen con números y no contengan "example"
+            # Filtrar correos válidos que no comiencen números y no contengan "example"
             correos_validos = [
                 correo for correo in lista_correos 
                 if re.match(regex, correo) and not correo[0].isdigit() and 'example' not in correo.lower()
