@@ -4,7 +4,8 @@ import re
 # Función para limpiar correos inválidos y conservar los válidos
 def limpiar_correos(df, columna_correo):
     # Expresión regular mejorada para validar correos electrónicos
-    regex = r'^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9-]+\.(com|co\.uk|org|net|net\.uk|edu|gov|io|info|biz)$'
+    # regex = r'^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9-]+\.(com|co\.uk|org|net|net\.uk|edu|gov|io|info|biz)$'
+    regex = r'^[a-zA-Z][a-zA-Z0-9._%+-]*@(wix\.com|[a-zA-Z0-9-]+\.(com|co\.uk|org|net|net\.uk|edu|gov|io|info|biz))$'
     
     # Limpiar la columna de correos
     def validar_correos(correos):
@@ -40,7 +41,7 @@ def guardar_correos_limpios(df_limpios, nombre_salida):
 # Configurar los nombres de los archivos
 archivo_entrada = "correos.xlsx"  # Nombre de tu archivo Excel de entrada
 archivo_salida = "limpios.xlsx"   # Nombre del archivo donde guardar los correos limpios
-columna_correo = "company_email"  # Nombre de la columna que contiene los correos. company_email
+columna_correo = "correo"  # Nombre de la columna que contiene los correos. company_email
 
 # Leer el archivo Excel original
 df = leer_excel(archivo_entrada)
