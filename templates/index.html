@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir archivo de correos</title>
+    <style>
+        /* Estilo para centrar el contenido en la pantalla */
+        body {
+            font-family: 'Arial', sans-serif;
+            /* background-color: rgb(228, 228, 228); */
+            background-image: url('https://i.blogs.es/cc1990/gmail-limpiar/500_333.webp'); /* Cambia la URL por la de tu imagen de fondo */
+            background-size: contain;
+            background-repeat: no-repeat; /* Evita que se repita */
+            background-position: center; /* Centra la imagen en la pantalla */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Fondo semitransparente para el formulario */
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Título estilizado */
+        h1 {
+            font-family: 'Verdana', sans-serif;
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        /* Estilo para el input del archivo */
+        input[type="file"] {
+            font-size: 1em;
+            margin-bottom: 20px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80%;
+        }
+
+        /* Botón estilizado */
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        /* Efecto hover en el botón */
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Subir archivo Excel.xlsx para limpiar correos</h1>
+        <form action="/procesar" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx" required>
+            <br>
+            <input type="submit" value="Subir y procesar">
+        </form>
+    </div>
+</body>
+</html>
