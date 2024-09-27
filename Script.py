@@ -41,7 +41,7 @@ def guardar_correos_limpios(df_limpios, nombre_salida):
 # Configurar los nombres de los archivos
 archivo_entrada = "correos.xlsx"  # Nombre de tu archivo Excel de entrada
 archivo_salida = "limpios.xlsx"   # Nombre del archivo donde guardar los correos limpios
-columna_correo = "correo"  # Nombre de la columna que contiene los correos. company_email
+columna_correo = "company_email"  # Nombre de la columna que contiene los correos. company_email
 
 # Leer el archivo Excel original
 df = leer_excel(archivo_entrada)
