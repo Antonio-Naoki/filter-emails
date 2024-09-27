@@ -11,10 +11,10 @@ def limpiar_correos(df, columna_correo):
         if isinstance(correos, str):
             # Separar correos por comas y limpiar espacios
             lista_correos = [correo.strip() for correo in correos.split(',')]
-            # Filtrar correos válidos que no comiencen con números
+            # Filtrar correos válidos que no comiencen con números y no contengan "example"
             correos_validos = [
                 correo for correo in lista_correos 
-                if re.match(regex, correo) and not correo[0].isdigit()
+                if re.match(regex, correo) and not correo[0].isdigit() and 'example' not in correo.lower()
             ]
             # Unir correos válidos de nuevo en una cadena separada por comas
             return ', '.join(correos_validos)
@@ -40,12 +40,12 @@ def guardar_correos_limpios(df_limpios, nombre_salida):
 # Configurar los nombres de los archivos
 archivo_entrada = "correos.xlsx"  # Nombre de tu archivo Excel de entrada
 archivo_salida = "limpios.xlsx"   # Nombre del archivo donde guardar los correos limpios
-columna_correo = "company_email"  # Nombre de la columna que contiene los correos
+columna_correo = "company_email"  # Nombre de la columna que contiene los correos. company_email
 
 # Leer el archivo Excel original
 df = leer_excel(archivo_entrada)
 
-# Limpiar los correos inválidos
+# Limpiar los correos inválidos y eliminar los que contienen "example"
 df_limpio = limpiar_correos(df, columna_correo)
 
 # Guardar los correos válidos junto con la información restante en un nuevo archivo
