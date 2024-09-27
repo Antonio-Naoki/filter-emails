@@ -51,7 +51,7 @@ def procesar_archivo():
     df = pd.read_excel(archivo)
 
     # Limpiar los correos inválidos
-    columna_correo = "correo"  # Cambia este nombre según tu archivo Excel
+    columna_correo = "company_email"  # Cambia este nombre según tu archivo Excel
     df_limpio = limpiar_correos(df, columna_correo)
 
     # Guardar el archivo filtrado en un nuevo archivo
