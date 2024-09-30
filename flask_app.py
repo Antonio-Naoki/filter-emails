@@ -6,11 +6,11 @@ import os
 app = Flask(__name__)
 
 # Función para limpiar correos inválidos y conservar los válidos
-def limpiar_correos(df, columna_correo):
+def limpiar_correos(df):
     # Expresión regular ajustada para incluir dominios específicos
     regex = r'^[a-zA-Z][a-zA-Z0-9._%+-]*@(wix\.com|[a-zA-Z0-9-]+\.(com|co\.uk|org|net|net\.uk|edu|gov|io|info|biz))$'
     
-    # Limpiar la columna de correos
+    # Función auxiliar para validar correos en una cadena
     def validar_correos(correos):
         if isinstance(correos, str):
             # Separar correos por comas y limpiar espacios
@@ -23,11 +23,15 @@ def limpiar_correos(df, columna_correo):
             # Unir correos válidos de nuevo en una cadena separada por comas
             return ', '.join(correos_validos)
         else:
-            # Si no es una cadena, retornar un string vacío
             return ''
-
-    # Aplicar la validación a la columna de correos
-    df[columna_correo] = df[columna_correo].apply(validar_correos)
+    
+    # Detectar las columnas que contienen correos electrónicos
+    for columna in df.columns:
+        # Suponer que si más del 50% de los valores en la columna coinciden con la expresión regular de correos, es una columna de correos
+        muestra = df[columna].dropna().astype(str).head(10)  # Toma una muestra de hasta 10 valores
+        if muestra.apply(lambda x: bool(re.match(r'.+@.+\..+', x))).mean() > 0.5:
+            # Aplicar la validación a la columna de correos
+            df[columna] = df[columna].apply(validar_correos)
     
     return df
 
@@ -50,12 +54,11 @@ def procesar_archivo():
     # Leer el archivo Excel
     df = pd.read_excel(archivo)
 
-    # Limpiar los correos inválidos
-    columna_correo = "company_email"  # Cambia este nombre según tu archivo Excel
-    df_limpio = limpiar_correos(df, columna_correo)
+    # Limpiar los correos inválidos en todas las columnas que contengan correos
+    df_limpio = limpiar_correos(df)
 
     # Guardar el archivo filtrado en un nuevo archivo
-    archivo_salida = "/tmp/limpios.xlsx" # Para un servidor como pythonanywhere.com hay que usar esta ruta para los archivos de descarga
+    archivo_salida = "/tmp/limpios.xlsx" # Para un servidor como pythonanywhere.com hay que usar esta ruta para los archivos de descarga: /tmp/limpios.xlsx
     df_limpio.to_excel(archivo_salida, index=False)
 
     # Enviar el archivo filtrado como respuesta para descarga
@@ -64,6 +67,76 @@ def procesar_archivo():
 if __name__ == '__main__':
     # Asegúrate de tener la carpeta de plantillas en el mismo nivel
     app.run(debug=True)
+
+
+
+# Codigo para el script con integracion web pero detectando la columna de correos llamada "company_email":
+# from flask import Flask, request, render_template, send_file
+# import pandas as pd
+# import re
+# import os
+
+# app = Flask(__name__)
+
+# # Función para limpiar correos inválidos y conservar los válidos
+# def limpiar_correos(df, columna_correo):
+#     # Expresión regular ajustada para incluir dominios específicos
+#     regex = r'^[a-zA-Z][a-zA-Z0-9._%+-]*@(wix\.com|[a-zA-Z0-9-]+\.(com|co\.uk|org|net|net\.uk|edu|gov|io|info|biz))$'
+    
+#     # Limpiar la columna de correos
+#     def validar_correos(correos):
+#         if isinstance(correos, str):
+#             # Separar correos por comas y limpiar espacios
+#             lista_correos = [correo.strip() for correo in correos.split(',')]
+#             # Filtrar correos válidos que no comiencen con números y no contengan "example"
+#             correos_validos = [
+#                 correo for correo in lista_correos 
+#                 if re.match(regex, correo) and not correo[0].isdigit() and 'example' not in correo.lower()
+#             ]
+#             # Unir correos válidos de nuevo en una cadena separada por comas
+#             return ', '.join(correos_validos)
+#         else:
+#             # Si no es una cadena, retornar un string vacío
+#             return ''
+
+#     # Aplicar la validación a la columna de correos
+#     df[columna_correo] = df[columna_correo].apply(validar_correos)
+    
+#     return df
+
+# # Ruta principal que muestra el formulario
+# @app.route('/')
+# def index():
+#     return render_template('index.html')
+
+# # Ruta para manejar la carga del archivo y procesamiento
+# @app.route('/procesar', methods=['POST'])
+# def procesar_archivo():
+#     if 'file' not in request.files:
+#         return "No se ha subido ningún archivo"
+    
+#     archivo = request.files['file']
+
+#     if archivo.filename == '':
+#         return "No se ha seleccionado ningún archivo"
+
+#     # Leer el archivo Excel
+#     df = pd.read_excel(archivo)
+
+#     # Limpiar los correos inválidos
+#     columna_correo = "company_email"  # Cambia este nombre según tu archivo Excel
+#     df_limpio = limpiar_correos(df, columna_correo)
+
+#     # Guardar el archivo filtrado en un nuevo archivo
+#     archivo_salida = "/tmp/limpios.xlsx" # Para un servidor como pythonanywhere.com hay que usar esta ruta para los archivos de descarga
+#     df_limpio.to_excel(archivo_salida, index=False)
+
+#     # Enviar el archivo filtrado como respuesta para descarga
+#     return send_file(archivo_salida, as_attachment=True)
+
+# if __name__ == '__main__':
+#     # Asegúrate de tener la carpeta de plantillas en el mismo nivel
+#     app.run(debug=True)
 
 
 
