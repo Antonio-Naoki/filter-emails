@@ -1,10 +1,65 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, flash, request, render_template, send_file, redirect, url_for
+from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin
 import pandas as pd
 import re
 import os
 
 app = Flask(__name__)
+# Comienza el inicio  de sesion:
+app.secret_key = 'clave_secreta'  # Cambia esto por una clave secreta segura
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
+# Definición de usuarios
+usuarios = {
+    'usuarioM1': {'password': 'contraseñaM1'},
+    'usuarioM2': {'password': 'contraseñaM2'}
+}
+
+# Simulación de base de datos de usuarios
+users = {'usuario': {'password': 'contraseña'}}
+
+# Clase de Usuario
+class User(UserMixin):
+    def __init__(self, username):
+        self.id = username
+
+# Cargar usuario
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id in users:
+        return User(user_id)
+    return None
+
+# Página de inicio de sesión
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username in usuarios and usuarios[username]['password'] == password:
+            user = User(username)
+            login_user(user)
+            return redirect(url_for('index'))  # Redirige a la página de inicio después de iniciar sesión
+        else:
+            flash("Credenciales incorrectas. Inténtalo de nuevo.", "error")
+    return render_template('login.html')  # Cambia el nombre del archivo HTML a 'login.html'
+
+# Ruta principal que muestra el formulario, protegida con login
+@app.route('/index')
+@login_required
+def sesion():
+    return render_template('index.html')
+
+# Ruta para cerrar sesión
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+# Termina el inicio de sesion.
+#---------------------------------------------------------------------------------------------------------
 # Función para limpiar correos inválidos y conservar los válidos
 def limpiar_correos(df):
     # Expresión regular ajustada para incluir dominios específicos
