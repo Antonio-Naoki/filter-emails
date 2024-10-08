@@ -18,7 +18,8 @@ usuarios = {
 }
 
 # Simulación de base de datos de usuarios
-users = {'usuario': {'password': 'contraseña'}}
+users = {'usuarioM1': {'password': 'contraseñaM1'},  # Asegúrate de que los nombres coincidan
+         'usuarioM2': {'password': 'contraseñaM2'}}
 
 # Clase de Usuario
 class User(UserMixin):
@@ -41,7 +42,7 @@ def login():
         if username in usuarios and usuarios[username]['password'] == password:
             user = User(username)
             login_user(user)
-            return redirect(url_for('index'))  # Redirige a la página de inicio después de iniciar sesión
+            return redirect(url_for('sesion'))  # Redirige a la página de inicio después de iniciar sesión
         else:
             flash("Credenciales incorrectas. Inténtalo de nuevo.", "error")
     return render_template('login.html')  # Cambia el nombre del archivo HTML a 'login.html'
@@ -93,7 +94,7 @@ def limpiar_correos(df):
 # Ruta principal que muestra el formulario
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('login.html')
 
 # Ruta para manejar la carga del archivo y procesamiento
 @app.route('/procesar', methods=['POST'])
