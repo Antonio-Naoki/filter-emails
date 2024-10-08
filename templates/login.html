@@ -8,7 +8,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            /* background-color: #f0f4f8; */
             background-image: url('https://media.istockphoto.com/id/1800776156/es/foto/4k-bolas-bokeh-intermitentes-coloridas-luz-fondo-abstracci%C3%B3n.jpg?s=612x612&w=0&k=20&c=Jo9tM3nXTah_8Pk3dwPwdv0N2sQnN0fYSae-7cX9QcY=');
             background-size: cover;
             background-repeat: no-repeat;
@@ -16,100 +15,61 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
+            /* Cambiado a columna para alinear el contenedor y el pie de página */
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* Ocupa toda la altura de la ventana */
         }
 
         .container {
             background-color: rgba(255, 255, 255, 0.8);
-            /* Fondo blanco semi-transparente */
             padding: 40px;
-            /* Aumenta el padding para que sea más amplio */
             border-radius: 10px;
-            /* Mejora el borde del contenedor */
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            /* Mejora la sombra */
             width: 400px;
-            /* Establece un ancho fijo para el contenedor */
             max-width: 90%;
-            /* Asegúrate de que no exceda el 90% del ancho de la pantalla */
         }
 
         h2 {
             color: #333;
-            /* Color del título */
             margin-bottom: 20px;
-            /* Margen inferior */
             font-size: 24px;
-            /* Tamaño de fuente del título */
         }
 
         label {
             font-weight: bold;
-            /* Texto en negrita */
             display: block;
-            /* Cada etiqueta en su propia línea */
             margin-bottom: 5px;
-            /* Margen inferior */
             text-align: left;
-            /* Alinear etiquetas a la izquierda */
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            /* Ancho completo */
             padding: 12px;
-            /* Relleno interior */
             border: 1px solid #ccc;
-            /* Borde gris */
             border-radius: 6px;
-            /* Bordes redondeados */
             margin-bottom: 20px;
-            /* Margen inferior */
             box-sizing: border-box;
-            /* Incluye el padding en el ancho total */
             font-size: 16px;
-            /* Tamaño de fuente */
         }
 
         input[type="submit"] {
             background-color: #1cb10e;
-            /* Color del botón */
             color: white;
-            /* Color del texto del botón */
             border: none;
-            /* Sin borde */
             border-radius: 6px;
-            /* Bordes redondeados */
             padding: 12px;
-            /* Relleno interior */
             cursor: pointer;
-            /* Cambia el cursor al pasar sobre el botón */
             font-size: 18px;
-            /* Tamaño de fuente */
             transition: background-color 0.3s, transform 0.3s;
-            /* Transición suave para el color de fondo y transformaciones */
             width: 100%;
-            /* Ancho completo del botón */
         }
 
         input[type="submit"]:hover {
             background-color: #0056b3;
-            /* Color al pasar el ratón por encima */
             transform: translateY(-2px);
-            /* Efecto de desplazamiento al pasar el ratón */
-        }
-
-        .footer {
-            margin-top: 20px;
-            /* Margen superior para el pie de página */
-            font-size: 14px;
-            /* Tamaño de fuente del pie de página */
-            color: #555;
-            /* Color del texto del pie de página */
         }
 
         .alert {
@@ -123,6 +83,14 @@
             color: #721c24;
             background-color: #f8d7da;
             border-color: #f5c6cb;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            /* Centrado del texto */
         }
     </style>
 </head>
@@ -151,6 +119,10 @@
 
             <input type="submit" value="Iniciar Sesión">
         </form>
+    </div>
+
+    <div class="footer">
+        Creado por Antonio Morales
     </div>
 </body>
 
