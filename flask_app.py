@@ -1,25 +1,32 @@
 from flask import Flask, flash, request, render_template, send_file, redirect, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin
 import pandas as pd
+import pyrebase
 import re
 import os
 
 app = Flask(__name__)
+app.secret_key = 'clave_secreta'
 # Comienza el inicio  de sesion:
-app.secret_key = 'clave_secreta'  # Cambia esto por una clave secreta segura
+
+# Configuración de Firebase
+firebase_config = {
+    "apiKey": "AIzaSyCP_3xBrnX3vqOwXpFtY1R2u3qXO943Jss",
+    "authDomain": "filteremails-1a87f.firebaseapp.com",
+    "projectId": "filteremails-1a87f",
+    "storageBucket": "filteremails-1a87f.appspot.com",
+    "messagingSenderId": "68320069554",
+    "appId": "1:668320069554:web:d235ffd7874e8b0a2896ab",
+    "measurementId": "G-KXNGC285RZ",
+    "databaseURL": ""  # Añade esto, aunque no lo uses
+}
+
+firebase = pyrebase.initialize_app(firebase_config)
+auth = firebase.auth()
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-# Definición de usuarios
-usuarios = {
-    'usuarioM1': {'password': 'contraseñaM1'},
-    'usuarioM2': {'password': 'contraseñaM2'}
-}
-
-# Simulación de base de datos de usuarios
-users = {'usuarioM1': {'password': 'contraseñaM1'},  # Asegúrate de que los nombres coincidan
-         'usuarioM2': {'password': 'contraseñaM2'}}
 
 # Clase de Usuario
 class User(UserMixin):
@@ -29,25 +36,26 @@ class User(UserMixin):
 # Cargar usuario
 @login_manager.user_loader
 def load_user(user_id):
-    if user_id in users:
-        return User(user_id)
-    return None
+    return User(user_id)
 
 # Página de inicio de sesión
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['username']
         password = request.form['password']
-        if username in usuarios and usuarios[username]['password'] == password:
-            user = User(username)
-            login_user(user)
-            return redirect(url_for('sesion'))  # Redirige a la página de inicio después de iniciar sesión
-        else:
+        try:
+            # Autenticación con Firebase
+            user = auth.sign_in_with_email_and_password(email, password)
+            user_id = user['localId']
+            user_obj = User(user_id)
+            login_user(user_obj)
+            return redirect(url_for('sesion'))
+        except:
             flash("Credenciales incorrectas. Inténtalo de nuevo.", "error")
-    return render_template('login.html')  # Cambia el nombre del archivo HTML a 'login.html'
+    return render_template('login.html')
 
-# Ruta principal que muestra el formulario, protegida con login
+# Ruta protegida
 @app.route('/index')
 @login_required
 def sesion():
@@ -252,3 +260,26 @@ if __name__ == '__main__':
 # guardar_correos_limpios(df_limpio, archivo_salida)
 
 # print(f"Proceso completado. Correos válidos guardados en '{archivo_salida}'.")
+
+
+# // Import the functions you need from the SDKs you need
+# import { initializeApp } from "firebase/app";
+# import { getAnalytics } from "firebase/analytics";
+# // TODO: Add SDKs for Firebase products that you want to use
+# // https://firebase.google.com/docs/web/setup#available-libraries
+
+# // Your web app's Firebase configuration
+# // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+# const firebaseConfig = {
+#   apiKey: "AIzaSyCP_3xBrnX3vqOwXpFtY1R2u3qXO943Jss",
+#   authDomain: "filteremails-1a87f.firebaseapp.com",
+#   projectId: "filteremails-1a87f",
+#   storageBucket: "filteremails-1a87f.appspot.com",
+#   messagingSenderId: "668320069554",
+#   appId: "1:668320069554:web:d235ffd7874e8b0a2896ab",
+#   measurementId: "G-KXNGC285RZ"
+# };
+
+# // Initialize Firebase
+# const app = initializeApp(firebaseConfig);
+# const analytics = getAnalytics(app);
